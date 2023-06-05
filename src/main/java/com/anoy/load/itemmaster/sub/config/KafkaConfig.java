@@ -38,8 +38,7 @@ public class KafkaConfig {
     }
   
     // Creating a Listener
-    public ConcurrentKafkaListenerContainerFactory
-    concurrentKafkaListenerContainerFactory()
+    public ConcurrentKafkaListenerContainerFactory concurrentKafkaListenerContainerFactory()
     {
         ConcurrentKafkaListenerContainerFactory<
             String, String> factory
