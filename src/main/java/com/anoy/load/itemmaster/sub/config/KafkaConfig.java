@@ -10,6 +10,8 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.ContainerProperties.AckMode;
 
 @EnableKafka
 @Configuration
@@ -33,17 +35,19 @@ public class KafkaConfig {
         config.put(
             ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
             StringDeserializer.class);
+        config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
   
         return new DefaultKafkaConsumerFactory<>(config);
     }
   
-    // Creating a Listener
-    public ConcurrentKafkaListenerContainerFactory concurrentKafkaListenerContainerFactory()
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String,String> concurrentKafkaListenerContainerFactory()
     {
         ConcurrentKafkaListenerContainerFactory<
             String, String> factory
             = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.getContainerProperties().setAckMode(AckMode.MANUAL_IMMEDIATE);
         return factory;
     }
 }
