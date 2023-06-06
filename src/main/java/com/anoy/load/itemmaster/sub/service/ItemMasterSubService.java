@@ -8,13 +8,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class ItemMasterSubService {
 
-@KafkaListener(topics = "itemmaster", groupId = "group_id")
-public void consume(ConsumerRecord<String, String> data)
-{
- System.out.println("message = " + data.value().toString());
- //acknowledgment.acknowledge();
-}
-	public void processData() {
-		
-	}
 }
