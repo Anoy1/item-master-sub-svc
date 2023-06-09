@@ -26,7 +26,7 @@ public class ItemMasterConsumer {
 	@Autowired
 	EBSItemMasterHandler ebsItemMasterHandler;
 	
-	@KafkaListener(topics = "itemmaster", groupId = "group_id", containerFactory = "concurrentKafkaListenerContainerFactory")
+	@KafkaListener(topics = "itemtopic", groupId = "group_id", containerFactory = "concurrentKafkaListenerContainerFactory")
 	public void consume(ConsumerRecord<String, String> data,Acknowledgment acknowledgment) throws JsonMappingException, JsonProcessingException {
 		acknowledgment.acknowledge();
 		ItemMasterData itemMasterData = mapper.readValue(data.value(),ItemMasterData.class);
