@@ -18,6 +18,8 @@ repositories {
 	mavenCentral()
 }
 
+extra["springCloudVersion"] = "2021.0.7"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -29,6 +31,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.kafka:spring-kafka-test")
 }
+
+
 
 tasks.withType<Test> {
 	useJUnitPlatform()
