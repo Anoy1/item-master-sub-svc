@@ -9,9 +9,9 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 import com.anoy.load.itemmaster.sub.handler.EBSItemMasterHandler;
-import com.anoy.load.itemmaster.sub.handler.ItemMasterHandler;
 import com.anoy.load.itemmaster.sub.model.EbsItemMasterEntity;
 import com.anoy.load.itemmaster.sub.model.ItemMasterData;
+import com.anoy.load.itemmaster.sub.service.ItemMasterSubService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,17 +22,22 @@ public class ItemMasterConsumer {
 	@Autowired
 	ObjectMapper mapper;
 	@Autowired
-	ItemMasterHandler itemMasterHandler;
-	@Autowired
 	EBSItemMasterHandler ebsItemMasterHandler;
+	@Autowired
+	ItemMasterSubService itemMasterSubService;
 	
 	@KafkaListener(topics = "itemtopic", groupId = "group_id", containerFactory = "concurrentKafkaListenerContainerFactory")
 	public void consume(ConsumerRecord<String, String> data,Acknowledgment acknowledgment) throws JsonMappingException, JsonProcessingException {
 		acknowledgment.acknowledge();
-		ItemMasterData itemMasterData = mapper.readValue(data.value(),ItemMasterData.class);
-		Optional<EbsItemMasterEntity> ebsResponse = ebsItemMasterHandler.getItemMasterFromEbs(itemMasterData.getItemId().toString());
-		System.out.println(ebsResponse.toString());
-		System.out.println("message = " + itemMasterData.getItemId() + itemMasterData.getMessageId());
-	}
+		
+		Optional<ItemMasterData> itemMasterData = Optional.ofNullable(mapper.readValue(data.value(),ItemMasterData.class));
+		if(itemMasterData.isPresent()) {
+			Optional<EbsItemMasterEntity> response = itemMasterSubService.getItemFromEbs(itemMasterData);
+			System.out.println(response.get().toString());
+			System.out.println("message = " + response.get().getItemId() + itemMasterData.get().getMessageId());
+		
+		}
+		
+		}
 
 }
